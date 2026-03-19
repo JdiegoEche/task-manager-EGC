@@ -1,0 +1,32 @@
+<div class="task-item" [class.completed]="task.completed">
+  <div class="task-content">
+    <input
+      type="checkbox"
+      [checked]="task.completed"
+      (change)="onToggleComplete()"
+      class="task-checkbox"
+      aria-label="Marcar tarea como completada"
+    />
+    <div class="task-text">
+      <p class="task-title">{{ task.title }}</p>
+      <p class="task-status">
+        {{ task.completed ? 'Completado' : 'Pendiente' }}
+      </p>
+      <p class="task-modified">
+        Modificado: {{ task.lastModified | date: 'short' }}
+      </p>
+    </div>
+  </div>
+  <div class="task-actions">
+    <button class="btn btn-edit" (click)="onEdit()" aria-label="Editar tarea">
+      Editar
+    </button>
+    <button
+      class="btn btn-delete"
+      (click)="onDelete()"
+      aria-label="Eliminar tarea"
+    >
+      Eliminar
+    </button>
+  </div>
+</div>

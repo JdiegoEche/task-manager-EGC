@@ -1,0 +1,58 @@
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+  <div class="form-group">
+    <label for="title" class="form-label">Título de la tarea</label>
+    <input
+      id="title"
+      type="text"
+      formControlName="title"
+      placeholder="Ingresa el título de la tarea"
+      class="form-input"
+      [class.error]="
+        taskForm.get('title')?.invalid &&
+        (taskForm.get('title')?.dirty || taskForm.get('title')?.touched)
+      "
+    />
+    <div
+      class="error-message"
+      *ngIf="
+        taskForm.get('title')?.invalid &&
+        (taskForm.get('title')?.dirty || taskForm.get('title')?.touched)
+      "
+    >
+      <p *ngIf="taskForm.get('title')?.errors?.['required']">
+        El título es obligatorio
+      </p>
+      <p *ngIf="taskForm.get('title')?.errors?.['minlength']">
+        El título debe tener al menos
+        {{ taskForm.get('title')?.errors?.['minlength'].requiredLength }}
+        caracteres
+      </p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="completed" class="form-label">
+      <input
+        id="completed"
+        type="checkbox"
+        formControlName="completed"
+        class="form-checkbox"
+      />
+      Marcar como completada
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-submit" [disabled]="taskForm.invalid">
+      {{ isEditMode ? 'Actualizar' : 'Crear' }} tarea
+    </button>
+    <button
+      type="button"
+      class="btn btn-cancel"
+      (click)="onCancel()"
+      *ngIf="isEditMode"
+    >
+      Cancelar
+    </button>
+  </div>
+</form>

@@ -1,0 +1,46 @@
+<div class="task-manager">
+  <div class="header">
+    <h1>Gestor de Tareas</h1>
+    <div class="filter-buttons">
+      <button
+        *ngFor="let filter of filterOptions"
+        (click)="setFilter(filter.value)"
+        [class.active]="currentFilter === filter.value"
+        class="filter-btn"
+      >
+        {{ filter.label }}
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="form-section">
+      <h2>{{ editingTask ? 'Editar Tarea' : 'Nueva Tarea' }}</h2>
+      <app-task-form
+        [task]="editingTask"
+        (submit)="onFormSubmit($event)"
+        (cancel)="onCancelEdit()"
+      ></app-task-form>
+    </div>
+
+    <div class="task-section">
+      <ng-container *ngIf="filteredTasks$ | async as filteredTasks">
+        <h2>Tareas ({{ filteredTasks.length }})</h2>
+
+        <div class="no-tasks" *ngIf="filteredTasks.length === 0">
+          <p>No hay tareas para mostrar</p>
+        </div>
+
+        <div class="tasks-list" *ngIf="filteredTasks.length > 0">
+          <app-task-item
+            *ngFor="let task of filteredTasks; trackBy: trackByTaskId"
+            [task]="task"
+            (toggleComplete)="onToggleComplete($event)"
+            (edit)="onEditTask($event)"
+            (delete)="onDeleteTask($event)"
+          ></app-task-item>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
