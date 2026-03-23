@@ -66,7 +66,8 @@ export class TaskListComponent implements OnInit, OnDestroy {
         return tasks.filter((task) => task.completed);
       case 'all':
       default:
-        return [...tasks].sort((a, b) => Number(a.completed) - Number(b.completed));
+        return [...tasks].sort((a, b) =>
+          Number(a.completed) - Number(b.completed));
     }
   }
 
