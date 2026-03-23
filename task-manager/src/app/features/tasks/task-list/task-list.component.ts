@@ -66,7 +66,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         return tasks.filter((task) => task.completed);
       case 'all':
       default:
-        return tasks;
+        return [...tasks].sort((a, b) => Number(a.completed) - Number(b.completed));
     }
   }
 
@@ -98,7 +98,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         })
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: () => {},
+          next: () => { },
           error: (error) => console.error('Error creating task:', error),
         });
     }
@@ -132,7 +132,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         .deleteTask(id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: () => {},
+          next: () => { },
           error: (error) => console.error('Error deleting task:', error),
         });
     }
