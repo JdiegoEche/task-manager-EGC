@@ -18,12 +18,9 @@ export class TaskService {
     this.loadTasks();
   }
 
-  // Cargar todas las tareas desde la API
   loadTasks(): void {
     this.http.get<Task[]>(this.API_URL).subscribe({
       next: (tasks) => {
-        // Limitamos a 20 tareas para mejor rendimiento
-        // Establecer todas como pendientes (completed: false)
         const processedTasks = tasks.slice(0, 20).map(task => ({
           ...task,
           completed: false,
@@ -38,14 +35,11 @@ export class TaskService {
     });
   }
 
-  // Obtener todas las tareas
   getAllTasks(): Observable<Task[]> {
     return this.tasks$;
   }
 
-  // Crear una nueva tarea
   createTask(taskData: CreateTaskDto): Observable<Task> {
-    // Validar que el título no esté vacío
     const title = taskData.title?.trim();
     if (!title || title.length < 3) {
       throw new Error('Task title must be at least 3 characters long');
@@ -62,10 +56,8 @@ export class TaskService {
       lastModified: new Date(),
     };
 
-    // Agregar la nueva tarea al principio del array
     this.tasksSubject.next([newTask, ...currentTasks]);
 
-    // Llamar a la API (sin esperar respuesta para optimistic update)
     return this.http.post<Task>(this.API_URL, newTask).pipe(
       map((response) => newTask),
       catchError((error) => {
@@ -75,32 +67,26 @@ export class TaskService {
     );
   }
 
-  // Actualizar una tarea existente
   updateTask(id: number, taskData: UpdateTaskDto): Observable<Task> {
     const currentTasks = this.tasksSubject.value;
     
-    // Verificar que la tarea existe
     const existingTaskIndex = currentTasks.findIndex((t) => t.id === id);
     if (existingTaskIndex === -1) {
       throw new Error('Task not found');
     }
 
-    // Crear la tarea actualizada
     const updatedTask = {
       ...currentTasks[existingTaskIndex],
       ...taskData,
       lastModified: new Date(),
     };
 
-    // Actualizar el array: reemplazar solo la tarea específica
     const updatedTasks = currentTasks.map((task) =>
       task.id === id ? updatedTask : task
     );
 
-    // Emitir el array actualizado
     this.tasksSubject.next(updatedTasks);
 
-    // Si hay error en la API, no revertir (optimistic update)
     return this.http.put<Task>(`${this.API_URL}/${id}`, updatedTask).pipe(
       map((response) => updatedTask),
       catchError((error) => {
@@ -110,7 +96,6 @@ export class TaskService {
     );
   }
 
-  // Eliminar una tarea
   deleteTask(id: number): Observable<void> {
     const currentTasks = this.tasksSubject.value;
     const filteredTasks = currentTasks.filter((t) => t.id !== id);
@@ -119,7 +104,6 @@ export class TaskService {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 
-  // Cambiar el estado de completado de una tarea
   toggleTaskComplete(id: number): Observable<Task> {
     const currentTasks = this.tasksSubject.value;
     const task = currentTasks.find((t) => t.id === id);

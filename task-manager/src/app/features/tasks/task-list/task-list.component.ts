@@ -35,7 +35,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService) { }
 
   ngOnInit(): void {
     this.updateFilteredTasks();
@@ -71,17 +71,15 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
 
   onFormSubmit(data: { title: string; completed: boolean }): void {
-    // Validar que el título no esté vacío
     const title = data.title?.trim();
     if (!title || title.length < 3) {
-      console.warn('Task title must be at least 3 characters');
       return;
     }
 
     if (this.editingTask) {
       const editingTaskId = this.editingTask.id;
-      this.editingTask = null; // Limpiar inmediatamente
-      
+      this.editingTask = null;
+
       this.taskService
         .updateTask(editingTaskId, {
           title: title,
@@ -89,9 +87,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         })
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: () => {
-            // Hecho
-          },
+          next: () => { },
           error: (error) => console.error('Error updating task:', error),
         });
     } else {
@@ -102,9 +98,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         })
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: () => {
-            // Hecho
-          },
+          next: () => {},
           error: (error) => console.error('Error creating task:', error),
         });
     }
@@ -127,9 +121,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
       .toggleTaskComplete(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
-          // El servicio ya actualizó el estado
-        },
+        next: () => { },
         error: (error) => console.error('Error toggling task:', error),
       });
   }
@@ -140,9 +132,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         .deleteTask(id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: () => {
-            // El servicio ya actualizó el estado
-          },
+          next: () => {},
           error: (error) => console.error('Error deleting task:', error),
         });
     }

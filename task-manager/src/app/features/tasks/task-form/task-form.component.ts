@@ -52,7 +52,6 @@ export class TaskFormComponent implements OnInit, OnChanges {
         });
       } else {
         this.isEditMode = false;
-        // Resetear completamente el formulario cuando se sale del modo edición
         this.taskForm.reset({title: '', completed: false}, {emitEvent: false});
         this.taskForm.markAsPristine();
         this.taskForm.markAsUntouched();
